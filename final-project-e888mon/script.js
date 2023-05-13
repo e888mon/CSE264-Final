@@ -1,16 +1,18 @@
 
 
 let deck = [];
-let dealerAce=false;
-let player1Ace= false;
-let player2Ace= false;
+let dealerAce = false;
+let player1Ace = false;
+let player2Ace = false;
 let player3Ace = false;
 let hidden;
-let dealerSum=0;
-let player1Sum=0;
-let player2Sum=0;
-let player3Sum=0;
-
+let dealerSum = 0;
+let player1Sum = 0;
+let player2Sum = 0;
+let player3Sum = 0;
+let player1Doubled = false;
+let player2Doubled = false;
+let player3Doubled = false;
 
 //which players turn is it
 let turn1 = false;
@@ -19,9 +21,12 @@ let turn3 = false;
 let turndealer = false;
 
 
+
+
+
 //scoreboard wins
-let win1 =0;
-let win2 =0;
+let win1 = 0;
+let win2 = 0;
 let win3 = 0;
 
 
@@ -32,7 +37,7 @@ hiddendisplay.id = "hiddencard";
 
 
 
-window.onload = function() {
+window.onload = function () {
     loadDeck();
     document.getElementById("deal").addEventListener("click", deal);
 
@@ -43,12 +48,12 @@ function loadDeck() {
     let suits = ["c", "s", "h", "d"];
     for (let i = 0; i < num.length; i++) {
         for (let j = 0; j < suits.length; j++) {
-            deck.push(num[i]+suits[j]);
+            deck.push(num[i] + suits[j]);
         }
     }
 
     //shuffle deck 100 times
-    for (let i = deck.length -1; i > 0; i--) {
+    for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (51));
         let temp = deck[i];
         deck[i] = deck[j];
@@ -62,7 +67,11 @@ function loadDeck() {
 
 
 
-function deal(){
+function deal() {
+    // resetting flags for players doubling
+    player1Doubled = false;
+    player2Doubled = false;
+    player3Doubled = false;
     let currentTurnSpan = document.getElementById("current-turn");
     currentTurnSpan.textContent = "Player 1";
     loadDeck();
@@ -71,10 +80,10 @@ function deal(){
 
     //dealer inital deal
     dealerSum = cardValue(hidden);
-    if (dealerSum == 11){
+    if (dealerSum == 11) {
         dealerAce = true;
     }
-    
+
     document.getElementById("dealer").append(hiddendisplay);
 
     let card = deck.pop();
@@ -83,63 +92,64 @@ function deal(){
     console.log(dealerSum);
 
     let cardDisplay = document.createElement("img");
-    cardDisplay.src = "./gifs/"+card+".gif";
+    cardDisplay.src = "./gifs/" + card + ".gif";
     cardDisplay.id = "card";
     document.getElementById("dealer").append(cardDisplay);
 
     //Player one initial two cards
     for (let i = 0; i < 2; i++) {
-        card =deck.pop();
+        card = deck.pop();
         let cardDisplay1 = document.createElement("img");
-        cardDisplay1.src = "./gifs/"+card+".gif";
+        cardDisplay1.src = "./gifs/" + card + ".gif";
         let temp = cardValue(card);
-        if (temp == 11){
-            player1Ace =true;
+        if (temp == 11) {
+            player1Ace = true;
         }
         player1Sum += temp;
-        
-        document.getElementById("player1").append(cardDisplay1); 
-        
-    
-    }  
+
+        document.getElementById("player1").append(cardDisplay1);
+
+
+    }
 
     //player two inital two cards
 
     for (let i = 0; i < 2; i++) {
-        card =deck.pop();
+        card = deck.pop();
         let cardDisplay1 = document.createElement("img");
-        cardDisplay1.src = "./gifs/"+card+".gif";
+        cardDisplay1.src = "./gifs/" + card + ".gif";
         let temp = cardValue(card);
-        if (temp == 11){
-            player2Ace =true;
+        if (temp == 11) {
+            player2Ace = true;
         }
         player2Sum += temp;
-        
-        document.getElementById("player2").append(cardDisplay1); 
-        
+
+        document.getElementById("player2").append(cardDisplay1);
+
     }
 
 
     //player 3 initial two cards
     for (let i = 0; i < 2; i++) {
-        card =deck.pop();
+        card = deck.pop();
         let cardDisplay1 = document.createElement("img");
-        cardDisplay1.src = "./gifs/"+card+".gif";
+        cardDisplay1.src = "./gifs/" + card + ".gif";
         let temp = cardValue(card);
-        if (temp == 11){
-            player3Ace =true;
+        if (temp == 11) {
+            player3Ace = true;
         }
         player3Sum += temp;
-        
-        document.getElementById("player3").append(cardDisplay1); 
-        
+
+        document.getElementById("player3").append(cardDisplay1);
+
     }
 
     //set it to player 1s turn
-    turn1= true;
+    turn1 = true;
 
     document.getElementById("hit").addEventListener("click", hit);
     document.getElementById("stay").addEventListener("click", stay);
+    document.getElementById("double").addEventListener("click", double);
 
     //display dealers hidden card
 
@@ -151,33 +161,33 @@ function deal(){
     // dealerCard.id = "card";
     // document.getElementById("dealer").append(cardDisplay);
 
-    
+
 
 }
 
-function hit(){
-    
-    
+function hit() {
+
+
     //player one turn
-    if (turn1){
-        
+    if (turn1) {
+
         let cardImg = document.createElement("img");
         let card = deck.pop();
-        cardImg.src = "./gifs/" +card+".gif";
+        cardImg.src = "./gifs/" + card + ".gif";
         console.log(card);
         let temp = cardValue(card);
-        if (temp == 11){
-            player1Ace =true;
+        if (temp == 11) {
+            player1Ace = true;
         }
-        document.getElementById("player1").append(cardImg); 
-        player1Sum = player1Sum+temp;
-        
+        document.getElementById("player1").append(cardImg);
+        player1Sum = player1Sum + temp;
+
         console.log(player1Sum);
         //if player sum is over 21
-        if (player1Sum > 21){
+        if (player1Sum > 21) {
             //if player has an ace, make ace = to 1 instead of 11
-            if (player1Ace){
-                player1Sum = player1Sum-10;
+            if (player1Ace) {
+                player1Sum = player1Sum - 10;
                 player1Ace = false;
                 //hit again
                 document.getElementById("hit").addEventListener("click", hit);
@@ -185,18 +195,18 @@ function hit(){
                 document.getElementById("stay").addEventListener("click", stay);
 
             }
-            else{
+            else {
                 console.log("busted")
                 //if no ace, player busted, end player 1 turn and start player2
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Player 2";
-                turn1=false;
-                turn2= true;
+                turn1 = false;
+                turn2 = true;
                 document.getElementById("hit").addEventListener("click", hit);
             }
         }
         //if player has under 21
-        else{
+        else {
             //hit again
             document.getElementById("hit").addEventListener("click", hit);
             //stay and next players turn
@@ -205,43 +215,43 @@ function hit(){
     }
 
     //player two turn. SAME THING AS PLAYER ONE JUST FOR PLAYER 2
-    else if(turn2){
+    else if (turn2) {
         let cardImg = document.createElement("img");
         let card = deck.pop();
-        cardImg.src = "./gifs/" +card+".gif";
+        cardImg.src = "./gifs/" + card + ".gif";
         console.log(card);
         let temp = cardValue(card);
-        if (temp == 11){
-            player1Ace =true;
+        if (temp == 11) {
+            player1Ace = true;
 
         }
-        document.getElementById("player2").append(cardImg); 
-        player2Sum = player2Sum+temp;
-        
+        document.getElementById("player2").append(cardImg);
+        player2Sum = player2Sum + temp;
+
         console.log(player2Sum);
         //if player sum is over 21
-        if (player2Sum > 21){
+        if (player2Sum > 21) {
             //if player has an ace, make ace = to 1 instead of 11
-            if (player2Ace){
-                player2Sum = player2Sum-10;
+            if (player2Ace) {
+                player2Sum = player2Sum - 10;
                 player2Ace = false;
                 //hit again
                 document.getElementById("hit").addEventListener("click", hit);
                 //stay and next players turn
                 document.getElementById("stay").addEventListener("click", stay);
             }
-            else{
+            else {
                 console.log("busted")
                 //if no ace, player busted, end player 1 turn and start player2
-                turn2=false;
-                turn3= true;
+                turn2 = false;
+                turn3 = true;
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Player 3";
                 document.getElementById("hit").addEventListener("click", hit);
             }
         }
         //if player has under 21
-        else{
+        else {
             //hit again
             document.getElementById("hit").addEventListener("click", hit);
             //stay and next players turn
@@ -250,43 +260,43 @@ function hit(){
     }
 
     //player 3 turn. SAME THING AS PLAYER ONE JUST FOR PLAYER 2
-    else if(turn3){
+    else if (turn3) {
         let cardImg = document.createElement("img");
         let card = deck.pop();
-        cardImg.src = "./gifs/" +card+".gif";
+        cardImg.src = "./gifs/" + card + ".gif";
         console.log(card);
         let temp = cardValue(card);
-        if (temp == 11){
-            player1Ace =true;
+        if (temp == 11) {
+            player1Ace = true;
         }
-        document.getElementById("player3").append(cardImg); 
-        player3Sum = player3Sum+temp;
-        
+        document.getElementById("player3").append(cardImg);
+        player3Sum = player3Sum + temp;
+
         console.log(player3Sum);
         //if player sum is over 21
-        if (player3Sum > 21){
+        if (player3Sum > 21) {
             //if player has an ace, make ace = to 1 instead of 11
-            if (player3Ace){
-                player3Sum = player3Sum-10;
+            if (player3Ace) {
+                player3Sum = player3Sum - 10;
                 player3Ace = false;
                 //hit again
                 document.getElementById("hit").addEventListener("click", hit);
                 //stay and next players turn
                 document.getElementById("stay").addEventListener("click", stay);
             }
-            else{
+            else {
                 console.log("busted")
                 //if no ace, player busted, end player 1 turn and start player2
-                turn3=false;
+                turn3 = false;
                 turnDealer = true;
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Dealer";
                 dealer();
-                
+
             }
         }
         //if player has under 21
-        else{
+        else {
             //hit again
             document.getElementById("hit").addEventListener("click", hit);
             //stay and next players turn
@@ -294,58 +304,190 @@ function hit(){
         }
     }
 
-    
+
 }
 
 
-function stay(){
-    if (turn1){
+function stay() {
+    if (turn1) {
         turn1 = false;
         turn2 = true;
         let currentTurnSpan = document.getElementById("current-turn");
         currentTurnSpan.textContent = "Player 2";
         document.getElementById("hit").addEventListener("click", hit);
     }
-    else if(turn2){
+    else if (turn2) {
         turn2 = false;
         turn3 = true;
         let currentTurnSpan = document.getElementById("current-turn");
         currentTurnSpan.textContent = "Player 3";
         document.getElementById("hit").addEventListener("click", hit);
     }
-    else if(turn3){
+    else if (turn3) {
         turn3 = false;
         turndealer = true;
         let currentTurnSpan = document.getElementById("current-turn");
         currentTurnSpan.textContent = "Dealer";
         dealer();
-        
+
+    }
+}
+
+// double function
+function double() {
+    // for tun 1, if double they get one more card and then turn ends
+    if (turn1) {
+        player1Doubled = true;
+        console.log("player 1 doubled");
+        // use same functionality as hit function just turn ends after
+        let cardImg = document.createElement("img");
+        let card = deck.pop();
+        cardImg.src = "./gifs/" + card + ".gif";
+        console.log(card);
+        let temp = cardValue(card);
+        if (temp == 11) {
+            player1Ace = true;
+        }
+        document.getElementById("player1").append(cardImg);
+        player1Sum = player1Sum + temp;
+
+        console.log(player1Sum);
+        // if the new sum is over 21 then
+        if (player1Sum > 21) {
+            //if player has an ace, make ace = to 1 instead of 11
+            if (player1Ace) {
+                player1Sum = player1Sum - 10;
+                player1Ace = false;
+            } else {
+                console.log("busted")
+                //if no ace, player busted, end player 1 turn and start player2
+                let currentTurnSpan = document.getElementById("current-turn");
+                currentTurnSpan.textContent = "Player 2";
+                turn1 = false;
+                turn2 = true;
+                document.getElementById("hit").addEventListener("click", hit);
+            }
+        }
+        let currentTurnSpan = document.getElementById("current-turn");
+        currentTurnSpan.textContent = "Player 2";
+        turn1 = false;
+        turn2 = true;
+        document.getElementById("hit").addEventListener("click", hit);
+        // double for player 2
+    } else if (turn2) {
+        player2Doubled = true;
+        console.log("player 2 doubled");
+        let cardImg = document.createElement("img");
+        let card = deck.pop();
+        cardImg.src = "./gifs/" + card + ".gif";
+        console.log(card);
+        let temp = cardValue(card);
+        if (temp == 11) {
+            player1Ace = true;
+
+        }
+        document.getElementById("player2").append(cardImg);
+        player2Sum = player2Sum + temp;
+
+        console.log(player2Sum);
+        //if player sum is over 21
+        if (player2Sum > 21) {
+            //if player has an ace, make ace = to 1 instead of 11
+            if (player2Ace) {
+                player2Sum = player2Sum - 10;
+                player2Ace = false;
+                //hit again
+                document.getElementById("hit").addEventListener("click", hit);
+                //stay and next players turn
+                document.getElementById("stay").addEventListener("click", stay);
+            }
+            else {
+                console.log("busted")
+                //if no ace, player busted, end player 1 turn and start player2
+                turn2 = false;
+                turn3 = true;
+                let currentTurnSpan = document.getElementById("current-turn");
+                currentTurnSpan.textContent = "Player 3";
+                document.getElementById("hit").addEventListener("click", hit);
+            }
+        }
+        turn2 = false;
+        turn3 = true;
+        let currentTurnSpan = document.getElementById("current-turn");
+        currentTurnSpan.textContent = "Player 3";
+        document.getElementById("hit").addEventListener("click", hit);
+        // double for player 3
+    } else if (turn3) {
+        player3Doubled = true;
+        console.log("player 3 doubled");
+        let cardImg = document.createElement("img");
+        let card = deck.pop();
+        cardImg.src = "./gifs/" + card + ".gif";
+        console.log(card);
+        let temp = cardValue(card);
+        if (temp == 11) {
+            player1Ace = true;
+        }
+        document.getElementById("player3").append(cardImg);
+        player3Sum = player3Sum + temp;
+
+        console.log(player3Sum);
+        //if player sum is over 21
+        if (player3Sum > 21) {
+            //if player has an ace, make ace = to 1 instead of 11
+            if (player3Ace) {
+                player3Sum = player3Sum - 10;
+                player3Ace = false;
+                //hit again
+                document.getElementById("hit").addEventListener("click", hit);
+                //stay and next players turn
+                document.getElementById("stay").addEventListener("click", stay);
+            }
+            else {
+                console.log("busted")
+                //if no ace, player busted, end player 1 turn and start player2
+                turn3 = false;
+                turnDealer = true;
+                let currentTurnSpan = document.getElementById("current-turn");
+                currentTurnSpan.textContent = "Dealer";
+                dealer();
+
+            }
+        }
+        turn3 = false;
+        turnDealer = true;
+        let currentTurnSpan = document.getElementById("current-turn");
+        currentTurnSpan.textContent = "Dealer";
+        dealer();
     }
 }
 
 
-function dealer(){
+
+
+
+function dealer() {
     //remove hidden card and actually show face of the card
     hiddendisplay.remove();
     let hiddendisplayC = document.createElement("img");
-    hiddendisplayC.src = "./gifs/"+hidden+".gif";
+    hiddendisplayC.src = "./gifs/" + hidden + ".gif";
     hiddendisplayC.id = "hiddencard";
     document.getElementById("dealer").append(hiddendisplayC);
 
 
     //deals until dealer has more than 16 or busts
-    while (dealerSum<16){
+    while (dealerSum < 16) {
         let cardImg = document.createElement("img");
         let card = deck.pop();
-        cardImg.src = "./gifs/" +card+".gif";
+        cardImg.src = "./gifs/" + card + ".gif";
         console.log(card);
         let temp = cardValue(card);
-        if (temp == 11){
-            dealerAce =true;
+        if (temp == 11) {
+            dealerAce = true;
         }
-        document.getElementById("dealer").append(cardImg); 
-        dealerSum = dealerSum+temp;
-        if(dealerSum> 21 && dealerAce){
+        document.getElementById("dealer").append(cardImg);
+        dealerSum = dealerSum + temp;
+        if (dealerSum > 21 && dealerAce) {
             dealerAce = false;
             dealerSum = dealerSum - 10;
         }
@@ -355,84 +497,126 @@ function dealer(){
 
 }
 
-function finish(){
 
+function finish() {
+    // checks if player won, if they did and they doubled they get 2 points, otherwise 1
     //player 1 scoring
-    if (player1Sum ==21){
+    if (player1Sum == 21 && player1Doubled === false) {
         win1++;
         let score = document.getElementById("player1-wins");
         score.textContent = win1.toString();
+    } else if (player1Sum == 21 && player1Doubled === true) {
+        win1 += 2;
+        let score = document.getElementById("player1-wins");
+        score.textContent = win1.toString();
     }
-    else if(player1Sum < 21){
-        if (dealerSum>21){
+    else if (player1Sum < 21) {
+        if (dealerSum > 21 && player1Doubled === false) {
             win1++;
             let score = document.getElementById("player1-wins");
             score.textContent = win1.toString();
-        }
-        else if (dealerSum<player1Sum){
-            win1++;
+        } else if (dealerSum > 21 && player1Doubled === true) {
+            win1 += 2
             let score = document.getElementById("player1-wins");
             score.textContent = win1.toString();
         }
+        else if (dealerSum < player1Sum && player1Doubled === false) {
+            win1++;
+            let score = document.getElementById("player1-wins");
+            score.textContent = win1.toString();
+        } else if (dealerSum < player1Sum && player1Doubled === true) {
+            win1 += 2;
+            let score = document.getElementById("player1-wins");
+            score.textContent = win1.toString();
+        }
+    } else if (player1Sum > 21) {
+        console.log("player 1 lost.")
     }
-
-    if (player2Sum ==21){
+    // checks if player won, if they did and they doubled they get 2 points, otherwise 1
+    if (player2Sum == 21 && player2Doubled === false) {
         win2++;
         let score = document.getElementById("player2-wins");
         score.textContent = win2.toString();
+    } else if (player2Sum == 21 && player2Doubled === true) {
+        win2 += 2;
+        let score = document.getElementById("player2-wins");
+        score.textContent = win2.toString();
     }
-    else if(player2Sum < 21){
-        if (dealerSum>21){
+    else if (player2Sum < 21) {
+        if (dealerSum > 21 && player2Doubled === false) {
             win2++;
             let score = document.getElementById("player2-wins");
             score.textContent = win2.toString();
-        }
-        else if (dealerSum<player2Sum){
-            win2++;
+        } else if (dealerSum > 21 && player2Doubled === true) {
+            win2 += 2;
             let score = document.getElementById("player2-wins");
             score.textContent = win2.toString();
         }
+        else if (dealerSum < player2Sum && player2Doubled === false) {
+            win2++;
+            let score = document.getElementById("player2-wins");
+            score.textContent = win2.toString();
+        } else if (dealerSum < player2Sum && player2Doubled === true) {
+            win2 += 2;
+            let score = document.getElementById("player2-wins");
+            score.textContent = win2.toString();
+        }
+    } else if (player2Sum > 21) {
+        console.log("player 2 lost.")
     }
-
-
-    if (player3Sum ==21){
+    // checks if player won, if they did and they doubled they get 2 points, otherwise 1
+    if (player3Sum == 21 && player3Doubled === false) {
         win3++;
         let score = document.getElementById("player3-wins");
         score.textContent = win3.toString();
+    } else if (player3Sum == 21 && player3Doubled === true) {
+        win3 += 2;
+        let score = document.getElementById("player3-wins");
+        score.textContent = win3.toString();
     }
-    else if(player3Sum < 21){
-        if (dealerSum>21){
+    else if (player3Sum < 21) {
+        if (dealerSum > 21 && player3Doubled === false) {
             win3++;
             let score = document.getElementById("player3-wins");
             score.textContent = win3.toString();
-        }
-        else if (dealerSum<player3Sum){
-            win3++;
+        } else if (dealerSum > 21 && player3Doubled === true) {
+            win3 += 2;
             let score = document.getElementById("player3-wins");
             score.textContent = win3.toString();
         }
+        else if (dealerSum < player3Sum && player3Doubled === false) {
+            win3++;
+            let score = document.getElementById("player3-wins");
+            score.textContent = win3.toString();
+        } else if (dealerSum < player3Sum && player3Doubled === true) {
+            win3 += 2;
+            let score = document.getElementById("player3-wins");
+            score.textContent = win3.toString();
+        }
+    } else if (player3Sum > 21) {
+        console.log("player 3 lost.")
     }
 
-    
+
 
     console.log(win1);
     console.log(win2);
     console.log(win3);
     document.getElementById("deal").addEventListener("click", clear);
 
-   
+
 }
 
-function clear(){
+function clear() {
     deck = [];
-    dealerAce=false;
-    player1Ace= false;
-    player2Ace= false;
+    dealerAce = false;
+    player1Ace = false;
+    player2Ace = false;
     player3Ace = false;
-    dealerSum=0;
-    player1Sum=0;
-    player2Sum=0;
-    player3Sum=0;
+    dealerSum = 0;
+    player1Sum = 0;
+    player2Sum = 0;
+    player3Sum = 0;
 
 
     //which players turn is it
@@ -442,59 +626,59 @@ function clear(){
     turndealer = false;
 
     let p1 = document.getElementById("player1");
-    p1.innerHTML= "";
+    p1.innerHTML = "";
     let p2 = document.getElementById("player2");
-    p2.innerHTML= "";
+    p2.innerHTML = "";
     let p3 = document.getElementById("player3");
-    p3.innerHTML= "";
+    p3.innerHTML = "";
     let d = document.getElementById("dealer");
-    d.innerHTML= "";
+    d.innerHTML = "";
 
     deal();
 }
 
 
-function cardValue(card){
-    if (card[0]=="2"){
+function cardValue(card) {
+    if (card[0] == "2") {
         return 2;
     }
-    else if (card[0]=="3"){
+    else if (card[0] == "3") {
         return 3;
     }
-    else if (card[0]=="4"){
+    else if (card[0] == "4") {
         return 4;
     }
-    else if (card[0]=="5"){
+    else if (card[0] == "5") {
         return 5;
     }
-    else if (card[0]=="6"){
+    else if (card[0] == "6") {
         return 6;
     }
-    else if (card[0]=="7"){
+    else if (card[0] == "7") {
         return 7;
     }
-    else if (card[0]=="8"){
+    else if (card[0] == "8") {
         return 8;
     }
-    else if (card[0]=="9"){
+    else if (card[0] == "9") {
         return 9;
     }
-    else if (card[0]=="t"){
+    else if (card[0] == "t") {
         return 10;
     }
-    else if (card[0]=="j"){
+    else if (card[0] == "j") {
         return 10;
     }
-    else if (card[0]=="q"){
+    else if (card[0] == "q") {
         return 10;
     }
-    else if (card[0]=="k"){
+    else if (card[0] == "k") {
         return 10;
     }
-    else if (card[0]=="a"){
+    else if (card[0] == "a") {
         return 11;
     }
-    else{
+    else {
         return null;
     }
 
