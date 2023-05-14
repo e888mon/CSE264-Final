@@ -74,6 +74,7 @@ function deal() {
     player3Doubled = false;
     let currentTurnSpan = document.getElementById("current-turn");
     currentTurnSpan.textContent = "Player 1";
+    
     loadDeck();
     hidden = deck.pop();
     // console.log(hidden);
@@ -179,6 +180,10 @@ function hit() {
         if (temp == 11) {
             player1Ace = true;
         }
+
+
+        cardImg.classList.add('dealt');  
+
         document.getElementById("player1").append(cardImg);
         player1Sum = player1Sum + temp;
 

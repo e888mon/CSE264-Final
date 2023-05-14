@@ -54,6 +54,8 @@ button {
     top: 160px;
     left: 640px;
     position:absolute;
+    font-family: 'Montserrat', sans-serif;
+
 
 }
 
@@ -72,6 +74,7 @@ button {
     top: 400px;
     left: 230px;
     position:absolute;
+    font-family: 'Montserrat', sans-serif;
 
 }
 
@@ -88,6 +91,7 @@ button {
     top: 450px;
     left: 230px;
     position:absolute;
+    
 }
 
 .player2_header{
@@ -104,6 +108,8 @@ button {
     top: 400px;
     left: 640px;
     position:absolute;
+    font-family: 'Montserrat', sans-serif;
+
 
 }
 
@@ -136,6 +142,8 @@ button {
     top: 400px;
     left: 1050px;
     position:absolute;
+    font-family: 'Montserrat', sans-serif;
+
 
 }
 .player3 {
@@ -186,4 +194,18 @@ button {
 .highlight-player{
     border-color: black;
 
+}
+
+@keyframes moveCard {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(200px);
+    }
+}
+
+
+.card.dealt {
+    animation: moveCard 1s ease-out;
 }
