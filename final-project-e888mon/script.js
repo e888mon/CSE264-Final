@@ -197,6 +197,7 @@ function hit() {
             }
             else {
                 console.log("busted")
+                showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Player 2";
@@ -242,6 +243,7 @@ function hit() {
             }
             else {
                 console.log("busted")
+                showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 turn2 = false;
                 turn3 = true;
@@ -286,6 +288,7 @@ function hit() {
             }
             else {
                 console.log("busted")
+                showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 turn3 = false;
                 turnDealer = true;
@@ -360,6 +363,7 @@ function double() {
                 player1Ace = false;
             } else {
                 console.log("busted")
+                showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Player 2";
@@ -403,6 +407,7 @@ function double() {
             }
             else {
                 console.log("busted")
+                showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 turn2 = false;
                 turn3 = true;
@@ -445,6 +450,8 @@ function double() {
             }
             else {
                 console.log("busted")
+                showMessage("Busted!");
+
                 //if no ace, player busted, end player 1 turn and start player2
                 turn3 = false;
                 turnDealer = true;
@@ -505,10 +512,14 @@ function finish() {
         win1++;
         let score = document.getElementById("player1-wins");
         score.textContent = win1.toString();
+        showMessage("Blackjack!");
+
     } else if (player1Sum == 21 && player1Doubled === true) {
         win1 += 2;
         let score = document.getElementById("player1-wins");
         score.textContent = win1.toString();
+        showMessage("Blackjack!");
+
     }
     else if (player1Sum < 21) {
         if (dealerSum > 21 && player1Doubled === false) {
@@ -682,6 +693,14 @@ function cardValue(card) {
         return null;
     }
 
+}
+
+function showMessage(message) {
+    var messageBox = document.getElementById('message');
+    var messageText = document.getElementById('messageText');
+    
+    messageText.textContent = message;
+    messageBox.style.display = 'block';
 }
 
 
