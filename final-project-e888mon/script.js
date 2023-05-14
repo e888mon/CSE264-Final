@@ -197,7 +197,7 @@ function hit() {
             }
             else {
                 console.log("busted")
-                showMessage("Busted!");
+               showMessage("Busted!");
                 //if no ace, player busted, end player 1 turn and start player2
                 let currentTurnSpan = document.getElementById("current-turn");
                 currentTurnSpan.textContent = "Player 2";
@@ -206,6 +206,16 @@ function hit() {
                 document.getElementById("hit").addEventListener("click", hit);
             }
         }
+     else if (player1Sum == 21) {
+        showMessage("Blackjack!");
+        //end player 1 turn and start player2
+        let currentTurnSpan = document.getElementById("current-turn");
+        currentTurnSpan.textContent = "Player 2";
+        turn1 = false;
+        turn2 = true;
+        document.getElementById("hit").addEventListener("click", hit);
+    }
+    
         //if player has under 21
         else {
             //hit again
@@ -252,6 +262,15 @@ function hit() {
                 document.getElementById("hit").addEventListener("click", hit);
             }
         }
+        else if (player2Sum == 21) {
+            showMessage("Blackjack!");
+            //if no ace, player busted, end player 1 turn and start player2
+            turn2 = false;
+            turn3 = true;
+            let currentTurnSpan = document.getElementById("current-turn");
+            currentTurnSpan.textContent = "Player 3";
+            document.getElementById("hit").addEventListener("click", hit);
+        }
         //if player has under 21
         else {
             //hit again
@@ -297,6 +316,15 @@ function hit() {
                 dealer();
 
             }
+        }
+        else if (player3Sum == 21) {
+            showMessage("Blackjack!");
+            //if no ace, player busted, end player 1 turn and start player2
+            turn3 = false;
+            turnDealer = true;
+            let currentTurnSpan = document.getElementById("current-turn");
+            currentTurnSpan.textContent = "Dealer";
+            dealer();
         }
         //if player has under 21
         else {
